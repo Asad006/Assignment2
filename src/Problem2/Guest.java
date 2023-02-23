@@ -1,50 +1,60 @@
-import java.util.concurrent.atomic.AtomicBoolean;
+package Problem2;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Guest extends Thread{
-    static int totalGuests;
-    boolean designatedLeader;
-    int counter = 1;
+    static int queueLength;
+    static volatile boolean[] queue;
+    static AtomicInteger tail;
 
-    AtomicBoolean hasCupcake;
-    AtomicBoolean isAllVisited;
-    boolean haveEaten;
+    int id;
+    int myQueueIndex = 0;
+    volatile double questsHadEnough = 0;
 
-    public Guest(AtomicBoolean cupcake, AtomicBoolean allVisited, boolean designatedLeader)
+    public Guest(int id)
     {
-        this.hasCupcake = cupcake;
-        this.isAllVisited = allVisited;
-        this.designatedLeader = designatedLeader;
+        this.id = id;
     }
 
     public void run()
     {
-
-        //This checks for the leader, and if the cake has been eaten,
-        // the counter will be increased because it means that a quest has visited, and ask for a new cake.
-
-        if (designatedLeader && !hasCupcake.get())
+        while (questsHadEnough < 1)
         {
-            counter++;
-            hasCupcake.set(true);
-
-            // check if all guests visited.
-            if (counter == totalGuests)
+            // This determines randomly if a guest to enter the queue.
+            double r = Math.random();
+            if (r < 0.2)
             {
-                isAllVisited.set(true);
-                System.out.println("All the guests have visited the labyrinth!. Game is over.\n");
+                waitingInQueue();
+                inTheShowRoom();
+                exitTheRoomAndRiseFlag();
             }
         }
+    }
 
-        // If I am not the counter, see the cupcake is there, and have not yet eaten, I will eat it.
-        // This will let the counter know that I have entered the labyrinth.
-        //If the thread is not the leader then it's a guest. if the thread has not eaten yet, then it will
-        // eat by setting haseating to false
-        if (!designatedLeader && hasCupcake.get() && !haveEaten)
-        {
-            hasCupcake.set(false);
-            haveEaten = true;
-        }
+    public void waitingInQueue()
+    {
+        // This simulates waiting in the  queue to enter the room.
+        //Mutually exclusive
+        myQueueIndex = tail.getAndIncrement() % queueLength;
+
+        // This makes the thread wait.
+        while (!queue[myQueueIndex]) {};
+    }
+
+    public void inTheShowRoom()
+    {
 
 
+        // time in the showroom is random.
+        while (Math.random() > 0.1) {}
+
+        questsHadEnough +=  Math.random();
+    }
+
+    public void exitTheRoomAndRiseFlag()
+    {
+        queue[myQueueIndex] = false;
+
+        queue[(myQueueIndex + 1) % queueLength] = true;
     }
 }
