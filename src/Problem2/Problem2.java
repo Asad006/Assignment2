@@ -13,33 +13,34 @@ public class Problem2 {
 
         int queueSize = numberOfGuests;
 
-        // Declare queue
+        // Setting up the Queue
         Guest.queueLength = queueSize;
         Guest.queue = new boolean[queueSize];
         Guest.queue[0] = true;
         Guest.tail = new AtomicInteger(0);
 
-        // Declare guests
+        // setting Guests
         Guest[] guests = new Guest[numberOfGuests];
         long startTime = System.currentTimeMillis();
 
-        // Simulate guests queuing up randomly
+        // Simulate guests
         for (int i = 0; i < guests.length; i++)
         {
             guests[i] = new Guest(i);
             guests[i].start();
         }
 
-        // Wait until all guests are done seeing the vase for good
+        // Wait for al  guests  have seen the vase
+
         for (int i = 0; i < guests.length; i++)
             guests[i].join();
 
-        // Calculate and print execution time
+
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
 
-        System.out.println("\nAll guests are now bored and left the party.");
-        System.out.printf("Room was entered %d times\n", Guest.tail.get());
-        System.out.printf("Execution time: %dms\n", executionTime);
+        System.out.println("\nAll guests stop entering the showroom and left the party.");
+        System.out.println("Number of entries the showroom:"+ Guest.tail.get());
+        System.out.println("Execution time: "+ executionTime);
     }
 }

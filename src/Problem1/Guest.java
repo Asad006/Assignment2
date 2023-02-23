@@ -37,10 +37,8 @@ public class Guest extends Thread{
             }
         }
 
-        // If I am not the counter, see the cupcake is there, and have not yet eaten, I will eat it.
-        // This will let the counter know that I have entered the labyrinth.
         //If the thread is not the leader then it's a guest. if the thread has not eaten yet, then it will
-        // eat by setting haseating to false
+        // eat by setting hasEating to false
         if (!designatedLeader && hasCupcake.get() && !haveEaten)
         {
             hasCupcake.set(false);

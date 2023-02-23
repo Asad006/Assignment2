@@ -8,7 +8,7 @@ public class Guest extends Thread{
     static AtomicInteger tail;
 
     int id;
-    int myQueueIndex = 0;
+    int currentQueueIndex = 0;
     volatile double questsHadEnough = 0;
 
     public Guest(int id)
@@ -35,10 +35,10 @@ public class Guest extends Thread{
     {
         // This simulates waiting in the  queue to enter the room.
         //Mutually exclusive
-        myQueueIndex = tail.getAndIncrement() % queueLength;
+        currentQueueIndex = tail.getAndIncrement() % queueLength;
 
-        // This makes the thread wait.
-        while (!queue[myQueueIndex]) {};
+        // This makes the thread wait for it turn.
+        while (!queue[currentQueueIndex]) {};
     }
 
     public void inTheShowRoom()
@@ -53,8 +53,8 @@ public class Guest extends Thread{
 
     public void exitTheRoomAndRiseFlag()
     {
-        queue[myQueueIndex] = false;
+        queue[currentQueueIndex] = false;
 
-        queue[(myQueueIndex + 1) % queueLength] = true;
+        queue[(currentQueueIndex + 1) % queueLength] = true;
     }
 }
