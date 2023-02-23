@@ -18,7 +18,7 @@ which thread will be executed as a simulation of the Minotaur selection of rando
 id the cake has been eating at every entry, and if so it will increment the counter.
 the guest will eat the cake at the first entry, and do not eat the cake at another visit.
 The game will stop when the  counter reach the number of guest indicating that all guests
-have entered the game.
+have entered the game .
 
 ## Problem2
 
@@ -32,4 +32,4 @@ For problem 2. I think guests should choose strategy 3 because of the following 
 The disadvantages of this strategy is as the follow:
 * It consumes a lot of memory as it needs to continue enqueuing and the entries go on.
 * Threads take CPU resources as they are waiting and do not do anything this lacks efficiency.
-* 
+
